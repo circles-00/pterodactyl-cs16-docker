@@ -11,7 +11,6 @@ MAINTAINER darknet, <magnummvm@gmail.com>
 RUN apt update \
 	 && apt-get upgrade -y \
      && apt -y install lib32gcc1 screen wget \
-	 && apt-get install -y wget \
      && useradd -m -d /home/container container
 
 
