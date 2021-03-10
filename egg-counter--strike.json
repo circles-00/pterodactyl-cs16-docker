@@ -1,0 +1,50 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v1",
+        "update_url": null
+    },
+    "exported_at": "2021-03-09T23:43:13+01:00",
+    "name": "Counter-Strike",
+    "author": "krezo@gold-hosting.me",
+    "description": null,
+    "features": null,
+    "images": [
+        "cs16:v1"
+    ],
+    "file_denylist": [],
+    "startup": ".\/hlds_run -game cstrike -port {{SERVER_PORT}} +maxplayers {{MAX_PLAYERS}} +map {{SERVER_MAP}} +mapchangecfgfile server.cfg +fps_max 333 +sys_ticrate 333  +heapsize 250000 -zone 8192 -num_edicts 4096 -nobreakpad -norestart",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"VAC secure mode is activated.\",\r\n    \"userInteraction\": []\r\n}",
+        "logs": "{\r\n    \"custom\": true,\r\n    \"location\": \"logs\/latest.log\"\r\n}",
+        "stop": "quit"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n# Image to install with is 'ubuntu:18.04'\r\napt -y update\r\napt-get upgrade -y\r\napt -y --no-install-recommends install curl lib32gcc1 ca-certificates\r\napt-get install -y wget\r\napt-get install -y unzip\r\niptables -A INPUT -p udp -m udp --sport 27015:27020 --dport 1025:65355 -j ACCEPT;\r\niptables -A INPUT -p udp -m udp --sport 4380 --dport 1025:65355 -j ACCEPT;\r\nrm -rf \/mnt\/server\r\n\r\n#Create server files dir and install game\r\nmkdir -p \/mnt\/server\/\r\ncd \/mnt\/server\r\nwget http:\/\/95.156.230.202\/init\/pub.zip\r\nunzip pub.zip\r\ncd .\/pub\r\nmv * ..\r\ncd ..\r\nrm -rf pub\r\nrm -rf pub.zip\r\n\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server",
+            "container": "debian:10",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Map",
+            "description": "",
+            "env_variable": "SERVER_MAP",
+            "default_value": "de_dust2",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|alpha_dash"
+        },
+        {
+            "name": "Maxplayers",
+            "description": "",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "32",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string|max:20"
+        }
+    ]
+}
